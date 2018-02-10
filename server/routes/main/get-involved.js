@@ -1,9 +1,10 @@
 var querystring = require("querystring");
 
 module.exports = function(config, req, res) {
-  var locale = (req.localeInfo && req.localeInfo.lang) ? req.localeInfo.lang : "en-US";
+  var locale =
+    req.localeInfo && req.localeInfo.lang ? req.localeInfo.lang : "en-US";
   var qs = querystring.stringify(req.query);
-  if(qs !== "") {
+  if (qs !== "") {
     qs = "?" + qs;
   }
 
@@ -11,7 +12,7 @@ module.exports = function(config, req, res) {
     loginURL: config.appURL + "/" + locale + "/login",
     editorHOST: config.editorHOST,
     editorURL: config.editorURL,
-    URL_PATHNAME: "/" + qs,
+    URL_PATHNAME: "/get-involved/" + qs,
     languages: req.app.locals.languages,
     pageName: "get-involved"
   };

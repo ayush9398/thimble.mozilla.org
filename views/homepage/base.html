@@ -14,8 +14,8 @@
     <link rel="prefetch" href="{{ editorHOST }}/dist/main.js">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@mozlearn">
-    <meta name="twitter:creator" content="@mozlearn">
+    <meta name="twitter:site" content="@codewiththimble">
+    <meta name="twitter:creator" content="@codewiththimble">
     <meta name="twitter:title" content="{{ gettext("thimbleHeading") | striptags }}">
     <meta name="twitter:description" content="{{ gettext("thimbleDescription1") | striptags }}">
     <meta name="twitter:image" content="{{ APP_HOSTNAME }}/img/social.png">
@@ -30,17 +30,16 @@
 
     <link rel="stylesheet" href="/resources/stylesheets/userbar.css">
     <link rel="stylesheet" href="/homepage/stylesheets/style.css">
-    <link rel="stylesheet" href="/homepage/stylesheets/get-involved.css">
-    <link rel="stylesheet" href="/homepage/stylesheets/gallery.css">
-    <link rel="stylesheet" href="/homepage/stylesheets/features.css">
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Arvo" rel="stylesheet">
 
     <title>{% block pagetitle %}{% endblock %}</title>
 
+    <script src="/locales/{{ localeDir }}/strings.js"></script>
+
     {% if GA_ACCOUNT %}
-    <script id="google-analytics-js" src="/{{ localeDir }}/homepage/scripts/google-analytics.js"
+    <script id="google-analytics-js" src="/resources/scripts/google-analytics.js"
             data-ga-account="{{ GA_ACCOUNT }}"
             data-ga-domain="{{ GA_DOMAIN }}"
             async>
@@ -54,10 +53,7 @@
 
       <script src="https://pontoon.mozilla.org/pontoon.js"></script>
 
-      <script id="homepage-script"
-          src="/scripts/vendor/require.min.js"
-          data-main="/{{ localeDir }}/homepage/scripts/main.js">
-      </script>
+      <script id="homepage-script" src="/homepage/scripts/main.js"></script>
 
       {% block top %}{% endblock %}
     </div>

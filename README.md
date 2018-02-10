@@ -24,9 +24,9 @@ Thimble requires a modern web browser, and we recommend using Mozilla Firefox or
 
 Thimble interacts with the Publish API (source managed in [publish.webmaker.org](https://github.com/mozilla/publish.webmaker.org)) to store users, projects, files and other content as well as publish user projects.
 
-For authentication and user management, Thimble uses Webmaker OAuth which consists of the Webmaker ID System (source managed in [id.webmaker.org](htps://github.com/mozilla/id.webmaker.org)) and the Webmaker Login API (source managed in [login.webmaker.org](https://github.com/mozilla/login.webmaker.org)).
+For authentication and user management, Thimble uses Webmaker OAuth which consists of the Webmaker ID System (source managed in [id.webmaker.org](https://github.com/mozilla/id.webmaker.org)) and the Webmaker Login API (source managed in [login.webmaker.org](https://github.com/mozilla/login.webmaker.org)).
 
-All three services along with Thimble are bundled together using Git subtrees to be run together using Vagrant, or, they may be run separately with Thimble [manually](#manual-installation).
+All three services are bundled together using Git subtrees to be run together using Vagrant, or, they may be run separately with Thimble [manually](#manual-installation).
 
 **Note:** The Git subtree bundle mentioned above for use with the automated installation can be found in the `/services` folder. It contains a subtree for each of the three services. These subtrees are not automatically kept in sync with their corresponding service's parent repositories. If you need to update one of the subtrees to match the history of its parent repository, follow these instructions:
   - Create a separate branch and checkout to it.
@@ -55,11 +55,11 @@ All three services along with Thimble are bundled together using Git subtrees to
 ### Prerequisites for Automated Installation
 In order for Thimble to be installed correctly, the following dependencies need to be installed in order:
 
-- Node.js (version 4.6 or later) [[download](https://nodejs.org/en/download/)]
+- Node.js (version 6.11.1 or later) [[download](https://nodejs.org/en/download/)]
 - [Brackets (Bramble)](#installing-brackets-bramble)
 - Virtualbox (version 5.1 or later) [[download](https://www.virtualbox.org/wiki/Downloads)]
 - Vagrant (version 1.9 or later) [[download](https://www.vagrantup.com/downloads.html)]
-  - __Note:__ On Windows machines, you may need to restart your computer after installing Vagrant for it to be fully usable.  
+  - __Note:__ On Windows machines, you may need to restart your computer after installing Vagrant for it to be fully usable.
   Avoid installation in directories containing *spaces*.  Vagrant is written in Ruby which has issues with directory names containing spaces, so be sure that your VAGRANT_HOME environment variable does not contain any spaces (i.e. a user home folder w/ spaces).  You can set VAGRANT_HOME via Control Panel > Advanced system settings > Environment variables > System Variables or set it from command prompt with [setx]%28https://technet.microsoft.com/en-us/library/cc755104(v=ws.11).aspx%29 command `setx VAGRANT_HOME c:\.vagrant.d -m`.
   For further safety, you can also check to make sure your VM snapshots are stored in a folder without spaces.  To do this, open the Virtualbox GUI, click Preferences > General > Default Machine Folder, and set your path here.
 
@@ -73,39 +73,31 @@ In order for Thimble to be installed correctly, the following dependencies need 
 ### Installing Thimble and Services with Vagrant
 The first step is to fork and clone Thimble and navigate to the cloned directory in a terminal shell.
 
-For the first time, to start all dependent services and Thimble, simply run:
+For the first time, you need to install Thimble's dependencies and start all dependent services. To do this, simply run the following commands in succession:
 
-```
+```sh
+npm install
+npm run env
 vagrant up
 ```
 This process can take a while depending on your internet connection speed as it needs to download all dependencies.
-The Vagrant VM is set to use 1 virtual CPU and 1.5G of RAM. If you find you need to adjust these resource levels, you
-can do so in the `/Vagrantfile`.
+The Vagrant VM is set to use 1 virtual CPU and 1.5G of RAM. If you find you need to adjust these resource levels, you can do so in the `/Vagrantfile`.
 
-When Vagrant finishes provisioning the VM, you will see a log that says `Starting Thimble server on http://localhost:3500/ (this may take a minute...)`.
-At this point you can access Thimble on [http://localhost:3500](http://localhost:3500). NOTE: if it does not work right away, give the server
-another minute to finish starting.
-
-If you want to manually force the Vagrant Thimble server to restart, use `npm run restart-server`.
-
-To suspend the VM use `vagrant suspend` (like putting it to sleep). You can also use `vagrant halt` to do a full shutdown.
-
-To restart the VM and Thimble again, re-run `vagrant up`.
-
-To see logs for the services running in Vagrant, use `npm run logs`.
-
-### Dealing with missing locale strings
-
-Sometimes the locale strings for Thimble change, which requires relocalizing inside of the Vagrant container. If you content that looks like a locale string key, rather than the content it should be, you can try running the following commands to resynchronise the locale string content:
-
+When Vagrant finishes provisioning the VM, all the services that Thimble relies on will be running. Now, you can start the Thimble server by running:
+```sh
+npm start
 ```
-vagrant ssh
-cd /vagrant
-npm run localize
-npm run localize-client
-```
+Once you see a log that says `Client files have been built. You can now load Thimble at http://localhost:3500`, you can access Thimble on [http://localhost:3500](http://localhost:3500).
 
-This will redownload all locale strings and rebuild the client to make use of them.
+You can terminate the Thimble server by hitting Ctrl-C.
+
+Once the Thimble server is on, if you make changes to any file inside the `public` folder, your changes will automatically be picked up and you can see them by refreshing your browser tab. If you make changes to any other file, you will need to terminate the Thimble server and restart it using `npm start` for the changes to take effect.
+
+To suspend the VM and temporarily stop the services Thimble relies on, use `vagrant suspend` (like putting it to sleep). You can also use `vagrant halt` to do a full shutdown of the services.
+
+To restart the VM and Thimble's services again, re-run `vagrant up`.
+
+To see logs for the services running in Vagrant, use `npm run services:logs`.
 
 ## Manual Installation
 You can also setup Thimble and its needed components outside Vagrant and Virtualbox. This might be needed if you want to:
@@ -116,7 +108,7 @@ You can also setup Thimble and its needed components outside Vagrant and Virtual
 In order for Thimble to be installed correctly, the following dependencies need to be installed:
 
 - Node.js 4.x or above (see note below)
-  - **Note:** The login.webmaker.org dependency needs a node version of 4.x only while all the other dependencies work with a node version of 4.x and above. We suggest installing [NVM](https://github.com/creationix/nvm) to allow the use of multiple versions of node.
+  - **Note:** The login.webmaker.org dependency needs a node version of 4.x only while all the other dependencies work with a node version of 4.x and above (Thimble requires node 6.11.1 or above). We suggest installing [NVM](https://github.com/creationix/nvm) to allow the use of multiple versions of node.
 - [Brackets (Bramble)](#installing-brackets-bramble)
 - [Webmaker ID server](#idwebmakerorg)
 - [Webmaker Publishing Server](#publishwebmakerorg)
@@ -131,8 +123,8 @@ Please note: On Windows, use ``copy`` instead of ``cp``
 
 #### Thimble
 * Fork and clone https://github.com/mozilla/thimble.mozilla.org
-* Run ``cp env.dist .env`` to create an environment file
 * Run ``npm install`` to install dependencies
+* Run ``npm run env`` to create an environment file
 * Run ``npm start`` to start the server
 
 #### id.webmaker.org
